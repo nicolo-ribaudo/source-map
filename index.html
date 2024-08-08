@@ -1490,7 +1490,7 @@ Possible extra rowspan handling
 </style>
   <meta content="Bikeshed version 6270e4735, updated Tue Aug 6 12:12:30 2024 -0700" name="generator">
   <link href="https://tc39.es/source-map/" rel="canonical">
-  <meta content="232723ba9f3132196fd9a92beac8fcd356de8c5c" name="revision">
+  <meta content="9de152fd564c89eb78bb5994fff2b96c12f88224" name="revision">
   <meta content="dark light" name="color-scheme">
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2584,7 +2584,7 @@ sources</a> <dfn class="dfn-paneled" data-dfn-for="decode source map mappings" d
      </ul>
      <p class="note" role="note"><span class="marker">NOTE:</span> These are the valid <a data-link-type="biblio" href="#biblio-base64" title="The Base16, Base32, and Base64 Data Encodings">[base64]</a> characters (excluding the padding character <code class="highlight"><c- o>=</c-></code>), together
 with <code class="highlight"><c- p>,</c-></code> and <code class="highlight"><c- p>;</c-></code>.</p>
-     <p>then, throw an error.</p>
+     <p>then throw an error.</p>
     <li data-md>
      <p>Let <var>decodedMappings</var> be a new empty <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list" id="ref-for-list①⑥">list</a>.</p>
     <li data-md>
@@ -2663,13 +2663,15 @@ report an error</a>.</p>
            <p><a data-link-type="dfn" href="#decode-a-base64-vlq" id="ref-for-decode-a-base64-vlq④">Decode a base64 VLQ</a> from <var>segment</var> given <var>position</var> and let <var>relativeNameIndex</var> be the result.</p>
           <li data-md>
            <p>If <var>relativeNameIndex</var> is not null, then:</p>
-          <li data-md>
-           <p>Increase <var>nameIndex</var> by <var>relativeNameIndex</var>.</p>
-          <li data-md>
-           <p>If <var>nameIndex</var> is negative or greater than <var>names</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size②">size</a>, <a data-link-type="dfn" href="#optionally-report-an-error" id="ref-for-optionally-report-an-error①②">optionally
-  report an error</a>.</p>
-          <li data-md>
-           <p>Else, set <var>decodedMapping</var>’s <a data-link-type="dfn" href="#decoded-mapping-name" id="ref-for-decoded-mapping-name①">name</a> to <var>names</var>[<var>nameIndex</var>].</p>
+           <ol>
+            <li data-md>
+             <p>Increase <var>nameIndex</var> by <var>relativeNameIndex</var>.</p>
+            <li data-md>
+             <p>If <var>nameIndex</var> is negative or greater than <var>names</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size②">size</a>, <a data-link-type="dfn" href="#optionally-report-an-error" id="ref-for-optionally-report-an-error①②">optionally
+report an error</a>.</p>
+            <li data-md>
+             <p>Else, set <var>decodedMapping</var>’s <a data-link-type="dfn" href="#decoded-mapping-name" id="ref-for-decoded-mapping-name①">name</a> to <var>names</var>[<var>nameIndex</var>].</p>
+           </ol>
           <li data-md>
            <p>If <var>position</var> does not point to the end of <var>segment</var>, <a data-link-type="dfn" href="#optionally-report-an-error" id="ref-for-optionally-report-an-error①③">optionally report an
 error</a>.</p>
