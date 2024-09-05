@@ -1490,7 +1490,7 @@ Possible extra rowspan handling
 </style>
   <meta content="Bikeshed version 6270e4735, updated Tue Aug 6 12:12:30 2024 -0700" name="generator">
   <link href="https://tc39.es/source-map/" rel="canonical">
-  <meta content="cbde88f658634505386fc8007bda3ec645e2e540" name="revision">
+  <meta content="133b910a9abc36fa64909d8d3dfa8cd167f0f4cd" name="revision">
   <meta content="dark light" name="color-scheme">
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2172,7 +2172,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Source Map</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Stage 0: Strawman, <time class="dt-updated" datetime="2024-08-26">26 August 2024</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Stage 0: Strawman, <time class="dt-updated" datetime="2024-09-05">5 September 2024</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2697,7 +2697,7 @@ error</a>.</p>
     <li data-md>
      <p>Let <var>value</var> be (<var>first</var> >> 1) &amp; 0x0F, as a number.</p>
     <li data-md>
-     <p>Let <var>nextShift</var> be 4.</p>
+     <p>Let <var>nextShift</var> be 16.</p>
     <li data-md>
      <p>Let <var>currentByte</var> be <var>first</var>.</p>
     <li data-md>
@@ -2712,14 +2712,17 @@ error</a>.</p>
       <li data-md>
        <p>Let <var>chunk</var> be <var>currentByte</var> &amp; 0x1F, as a number.</p>
       <li data-md>
-       <p>Add <var>chunk</var> &lt;&lt; <var>nextShift</var> to <var>value</var>.</p>
+       <p>Add <var>chunk</var> * <var>nextShift</var> to <var>value</var>.</p>
       <li data-md>
        <p>If <var>value</var> is greater than or equal to 2<sup>31</sup>, throw an error.</p>
       <li data-md>
-       <p>Increase <var>nextShift</var> by 5.</p>
+       <p>Multiply <var>nextShift</var> by 32.</p>
      </ol>
     <li data-md>
      <p>Advance <var>position</var> by 1.</p>
+    <li data-md>
+     <p>If <var>value</var> is 0 and <var>sign</var> is -1, return -2147483648.</p>
+     <p class="note" role="note"><span class="marker">NOTE:</span> -2147483648 is the smallest 32-bit signed integer.</p>
     <li data-md>
      <p>Return <var>value</var> * <var>sign</var>.</p>
    </ol>
