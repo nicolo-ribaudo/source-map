@@ -1490,7 +1490,7 @@ Possible extra rowspan handling
 </style>
   <meta content="Bikeshed version 6270e4735, updated Tue Aug 6 12:12:30 2024 -0700" name="generator">
   <link href="https://tc39.es/source-map/" rel="canonical">
-  <meta content="133b910a9abc36fa64909d8d3dfa8cd167f0f4cd" name="revision">
+  <meta content="9a78fff2794509fab6b612626e4cb5a8cd225f48" name="revision">
   <meta content="dark light" name="color-scheme">
 <style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
@@ -2596,6 +2596,8 @@ with <code class="highlight"><c- p>,</c-></code> and <code class="highlight"><c-
     <li data-md>
      <p>Let <var>sourceIndex</var> be 0.</p>
     <li data-md>
+     <p>Let <var>nameIndex</var> be 0.</p>
+    <li data-md>
      <p>While <var>generatedLine</var> is less than <var>groups</var>’s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size">size</a>:</p>
      <ol>
       <li data-md>
@@ -2609,8 +2611,6 @@ with <code class="highlight"><c- p>,</c-></code> and <code class="highlight"><c-
          <p>Let <var>originalLine</var> be 0.</p>
         <li data-md>
          <p>Let <var>originalColumn</var> be 0.</p>
-        <li data-md>
-         <p>Let <var>nameIndex</var> be 0.</p>
         <li data-md>
          <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-iterate" id="ref-for-list-iterate③">For each</a> <var>segment</var> in <var>segments</var>:</p>
          <ol>
