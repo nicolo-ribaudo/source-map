@@ -409,6 +409,8 @@ sources=] <dfn for="decode source map mappings">|sources|</dfn>, run the followi
 1. Let |decodedMappings| be a new empty [=list=].
 1. Let |groups| be the result of [=strictly split|strictly splitting=] |mappings| on `;`.
 1. Let |generatedLine| be 0.
+1. Let |originalLine| be 0.
+1. Let |originalColumn| be 0.
 1. Let |sourceIndex| be 0.
 1. Let |nameIndex| be 0.
 1. While |generatedLine| is less than |groups|'s [=list/size=]:
@@ -416,8 +418,6 @@ sources=] <dfn for="decode source map mappings">|sources|</dfn>, run the followi
         1. Let |segments| be the result of [=strictly split|strictly splitting=]
             |groups|[|generatedLine|] on `,`.
         1. Let |generatedColumn| be 0.
-        1. Let |originalLine| be 0.
-        1. Let |originalColumn| be 0.
         1. [=For each=] |segment| in |segments|:
             1. Let |position| be a [=position variable=] for |segment|, initially pointing at
                 |segment|'s start.
@@ -531,6 +531,10 @@ run the following steps:
         |decodedSource|'s [=decoded source/content=] to |sourcesContent|[|index|].
     1. [=list/Append=] |decodedSource| to |decodedSources|.
 1. Return |decodedSources|.
+
+NOTE: Implementations that support showing source contents but do not support showing multiple
+sources with the same URL and different content will arbitrarily choose one of the various contents
+corresponding to the given URL.
 
 Extensions {#extensions}
 ------------------------
