@@ -1,8 +1,0 @@
-node_modules
-out
-
-# Used by the old bikeshed-based spec. Keep these ignores to reduce friction
-# when switching between old and new branches.
-.venv
-source-map.html
-.env
