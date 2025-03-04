@@ -104,7 +104,7 @@
     <li>Support source-level debugging allowing bidirectional mapping</li>
     <li>Support server-side stack trace deobfuscation</li>
   </ul>
-  <p>The original source map format (v1) was created by Joseph Schorr for use by Closure Inspector to enable source-level debugging of optimized JavaScript code (although the format itself is language agnostic). However, as the size of the projects using source maps expanded, the verbosity of the format started to become a problem. The v2 format (Source Map Revision 2 Proposal) was created by trading some simplicity and flexibility to reduce the overall size of the source map. Even with the changes made with the v2 version of the format, the source map file size was limiting its usefulness. The v3 format is based on suggestions made by Pavel Podivilov (Google).</p>
+  <p>The <emu-not-ref>original source</emu-not-ref> map format (v1) was created by Joseph Schorr for use by Closure Inspector to enable source-level debugging of optimized JavaScript code (although the format itself is language agnostic). However, as the size of the projects using source maps expanded, the verbosity of the format started to become a problem. The v2 format (Source Map Revision 2 Proposal) was created by trading some simplicity and flexibility to reduce the overall size of the source map. Even with the changes made with the v2 version of the format, the source map file size was limiting its usefulness. The v3 format is based on suggestions made by Pavel Podivilov (Google).</p>
   <p>The source map format does not have version numbers anymore, and it is instead hard-coded to always be "3".</p>
   <p>In 2023-2024, the source map format was developed into a more precise Ecma standard, with significant contributions from many people. Further iteration on the source map format is expected to come from TC39-TG4.</p>
   <p>
@@ -301,7 +301,7 @@
     <li>The <dfn id="json-sourcesContent"><code>sourcesContent</code> field</dfn> is an optional list of source content (i.e. the original source) strings, used when the source cannot be hosted. The contents are listed in the same order as in the sources field. Entries may be *null* if some <emu-xref href="#sec-terms-and-definitions-original-source">original sources</emu-xref> should be retrieved by name.</li>
     <li>The <dfn id="json-names"><code>names</code> field</dfn> is an optional list of symbol names which may be used by the mappings field.</li>
     <li>The <dfn id="json-mappings"><code>mappings</code> field</dfn> is a string with the encoded mapping data (see section <emu-xref href="#sec-mappings"></emu-xref>).</li>
-    <li>The <dfn id="json-ignoreList"><code>ignoreList</code> field</dfn> is an optional list of indices of files that should be considered third party code, such as framework code or bundler-generated code. This allows developer tools to avoid code that developers likely don't want to see or step through, without requiring developers to configure this beforehand. It refers to the sources field and lists the indices of all the known third-party sources in the source map. Some browsers may also use the deprecated `x_google_ignoreList` field if `ignoreList` is not present.</li>
+    <li>The <dfn id="json-ignoreList"><code>ignoreList</code> field</dfn> is an optional list of indices of files that should be considered third party code, such as framework code or bundler-<emu-not-ref>generated code</emu-not-ref>. This allows developer tools to avoid code that developers likely don't want to see or step through, without requiring developers to configure this beforehand. It refers to the sources field and lists the indices of all the known third-party sources in the source map. Some browsers may also use the deprecated `x_google_ignoreList` field if `ignoreList` is not present.</li>
   </ul>
 
   <emu-clause id="sec-decoding-source-maps">
@@ -374,7 +374,7 @@
       <emu-alg>
         1. Let _json_ be Call(%JSON.parse%, *null*, « _string_ »).
         1. If _json_ is not an Object or IsArray(_json_) is *true*, throw an error.
-        1. If HasOwnProperty(_json_, *"sections"*) is *false*, then
+        1. If HasOwnProperty(_json_, *"sections"*) is *true*, then
           1. Return DecodeIndexSourceMap(_json_, _baseURL_).
         1. Return DecodeSourceMap(_json_, _baseURL_).
       </emu-alg>
@@ -656,15 +656,15 @@
           1. Assert: _first_ &lt; 64.
           1. If _first_ modulo 2 is 0, let _sign_ be 1.
           1. Else, let _sign_ be -1.
-          1. Let _value_ be min(floor(_value_ / 2), 2<sup>4</sup> - 1).
+          1. Let _value_ be min(floor(_first_ / 2), 2<sup>4</sup> - 1).
           1. Let _nextShift_ be 16.
           1. Let _currentByte_ be _first_.
           1. Repeat, while floor(_currentByte_ / 2<sup>5</sup>) modulo 2 = 1,
             1. If _position_.[[Value]] = _segmentLen_, throw an error.
             1. Set _currentByte_ to ConsumeBase64ValueAt(_segment_, _position_).
-            1. Let _chunk_ be min(_value_, 2<sup>5</sup> - 1).
+            1. Let _chunk_ be min(_currentByte_, 2<sup>5</sup> - 1).
             1. Set _value_ to _value_ + _chunk_ × _nextShift_.
-            1. If _value_ &ge; 2<sup>32</sup>, throw an error.
+            1. If _value_ &ge; 2<sup>31</sup>, throw an error.
             1. Set _nextShift_ to _nextShift_ × 2<sup>5</sup>.
           1. If _value_ is 0 and _sign_ is -1, return -2<sup>31</sup>.
           1. Return _sign_ × _value_.
@@ -680,8 +680,9 @@
           <dl class="header"></dl>
           <emu-alg>
             1. Assert: _position_.[[Value]] is a non-negative integer smaller than the length of _string_.
-            1. Let _char_ be the substring of _string_ from _position_ to _position_+ 1.
+            1. Let _char_ be the substring of _string_ from _position_ to _position_ + 1.
             1. Assert: _char_ is a valid <emu-xref href="#sec-references-informative">base64</emu-xref> character as defined by IETF RFC 4648.
+            1. Set _position_.[[Value]] to _position_.[[Value]] + 1.
             1. Return the integer corresponding to _char_, according to the <emu-xref href="#sec-references-informative">base64</emu-xref> encoding as defined by IETF RFC 4648.
           </emu-alg>
         </emu-clause>
@@ -776,8 +777,8 @@
         1. Let _sourcesContentCount_ be the the number of elements in _sourcesContent_.
         1. Let _sourceUrlPrefix_ be *""*.
         1. If _sourceRoot_ &ne; *null*, then
-          1. If _sourceRoot_ contains the code point U+002F (/), then
-            1. Let _idx_ be the index of the last occurrence of U+002F (/) in _sourceRoot_.
+          1. If _sourceRoot_ contains the code point U+002F (SOLIDUS), then
+            1. Let _idx_ be the index of the last occurrence of U+002F (SOLIDUS) in _sourceRoot_.
             1. Set _sourceUrlPrefix_ to the substring of _sourceRoot_ from 0 to _idx_ + 1.
           1. Else, set _sourceUrlPrefix_ to the string-concatenation of _sourceRoot_ and *"/"*.
         1. For each _source_ in _sources_ with index _index_, do
@@ -869,7 +870,7 @@
         1. If _section_ is not an Object or IsArray(_section_) is *true*, optionally report an error.
         1. Else,
           1. Let _offset_ be Get(_section_, *"offset"*).
-          1. If _offset_ is not an Object or IsArray(_offset_) ir *true*, throw an error.
+          1. If _offset_ is not an Object or IsArray(_offset_) is *true*, throw an error.
           1. Let _offsetLine_ be Get(_offset_, *"line"*).
           1. Let _offsetColumn_ be Get(_offset_, *"column"*).
           1. If _offsetLine_ is not an integral Number, then
@@ -903,8 +904,8 @@
               1. Append _mapping_ to _offsetMappings_.
             1. Set _sourceMap_.[[Mappings]] to the list-concatenation of _sourceMap_.[[Mappings]] and _offsetMappings_.
             1. Set _previousOffset_ to _offset_.
-            1. Let _sortedMappings_ be a copy of _offsetMappings_, sorted in ascending order, with a Decoded Mapping Record _a_ being less than a Decoded Mapping Record _b_ if GeneratedPositionLessThen(_a_, _b_) is *true*.
-            1. If _sortedMappings_ is not empty, set _previousLastMappings_ to the last element of _sortedMappings_.
+            1. Let _sortedMappings_ be a copy of _offsetMappings_, sorted in ascending order, with a Decoded Mapping Record _a_ being less than a Decoded Mapping Record _b_ if GeneratedPositionLessThan(_a_, _b_) is *true*.
+            1. If _sortedMappings_ is not empty, set _previousLastMapping_ to the last element of _sortedMappings_.
         1. Return _sourceMap_.
     </emu-alg>
 
@@ -912,9 +913,9 @@
       Implementations may choose to represent index source map sections without appending the mappings together, for example, by storing each section separately and conducting a binary search.
     </emu-note>
 
-    <emu-clause id="sec-GeneratedPositionLessThen" type="abstract operation">
+    <emu-clause id="sec-GeneratedPositionLessThan" type="abstract operation">
       <h1>
-        GeneratedPositionLessThen (
+        GeneratedPositionLessThan (
           _a_: a Decoded Mapping Record,
           _b_: a Decoded Mapping Record,
         ): a Boolean
@@ -1101,7 +1102,7 @@ return lastURL;</code></pre>
             1. Let _pattern_ be RegExpCreate(*"^[@#]\\s\*sourceMappingURL=(\\S\*?)\\s\*$"*, *""*).
             1. Let _match_ be RegExpExec(_pattern_, _comment_).
             1. If _match_ is not *null*, return Get(_match_, *"1"*).
-            1. Return *null*.
+            1. Return ~NONE~.
           </emu-alg>
 
           <emu-note>The prefix for this annotation was initially `//@`, however this conflicts with Internet Explorer's Conditional Compilation and was changed to `//#`.</emu-note>
@@ -1218,7 +1219,7 @@ return lastURL;</code></pre>
   <emu-annex id="sec-language-neutral-mapping">
     <h1>Language neutral stack mapping</h1>
 
-    <p>Stack tracing mapping without knowledge of the source language is not covered by this document.</p>
+    <p>Stack tracing mapping without knowledge of the source language is not <emu-not-ref>covered</emu-not-ref> by this document.</p>
   </emu-annex>
 
   <emu-annex id="sec-multi-level-mapping">
